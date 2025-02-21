@@ -50,7 +50,7 @@ public class Eleicao {
     }
 
     public void relatorio3(){
-        //ordena candidatos
+        //sort()
         int i = 1;
         System.out.println("Candidatos mais votados (em ordem decrescente de votação e respeitando número de vagas):");
         for (Candidato c : candidatos.values()) {
@@ -62,7 +62,7 @@ public class Eleicao {
     }
 
     public void relatorio4(){
-        //ordena candidatos
+        //sort()
         int i = 1;
         System.out.println("Teriam sido eleitos se a votação fosse majoritária, e não foram eleitos:");
         for (Candidato c : candidatos.values()) {
@@ -79,8 +79,22 @@ public class Eleicao {
         return candidatos;
     }
 
+    public Candidato getCandidato(int num){
+        Candidato c = candidatos.get(num);
+        return c;
+    }
+
     public HashMap<Integer, Partido> getPartidos() {
         return partidos;
+    }
+
+    public Partido getPartido(int num){
+        Partido p = partidos.get(num);
+        return p;
+    }
+
+    public boolean partidoExiste(int num){
+        return(partidos.get(num) != null);
     }
 
     public int getVagas() {
