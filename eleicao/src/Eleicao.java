@@ -15,7 +15,7 @@ public class Eleicao {
         this.data = data;
         this.candidatos = new HashMap<>();
         this.partidos = new HashMap<>();
-        //this.eleitosCandidatos = new LinkedList<>();
+        this.eleitosCandidatos = new LinkedList<>();
     }
 
     public void adicionaCandidato(Candidato c){
