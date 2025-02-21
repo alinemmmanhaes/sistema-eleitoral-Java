@@ -1,15 +1,15 @@
-import java.util.Date;
+import java.time.LocalDate;
 
 public class Candidato {
     private int numero;
     private String nome;
     private Partido partido;
-    private Date nascimento;
+    private LocalDate nascimento;
     private Boolean eleito;
-    private Boolean genero;
+    private int genero;
     private int qtdVotos;
     
-    public Candidato(int numero, String nome, Partido partido, Date nascimento, Boolean eleito, Boolean genero) {
+    public Candidato(int numero, String nome, Partido partido, LocalDate nascimento, Boolean eleito, int genero) {
         this.numero = numero;
         this.nome = nome;
         this.partido = partido;
@@ -19,28 +19,37 @@ public class Candidato {
         this.qtdVotos = 0;
     }
 
-    public int getNumeroCandidato() {
+    public int getNumero() {
         return numero;
     }
-    public String getNomeCandidato() {
+    public String getNome() {
         return nome;
     }
     public Partido getPartido() {
         return partido;
     }
-    public java.util.Date getNascimentoCandidato() {
+    public LocalDate getNascimento() {
         return nascimento;
     }
-    public Boolean getCandidatoEleito() {
+    public Boolean getEleito() {
         return eleito;
     }
-    public Boolean getGeneroCandidato() {
+    public int getGenero() {
         return genero;
     }
-    public int getQtdVotosCandidato() {
+    public int getQtdVotos() {
         return qtdVotos;
     }
     public void aumentaQtdVotos(int qtdVotos) {
         this.qtdVotos += qtdVotos;
+    }
+
+    @Override
+    public String toString() {
+        String nomeprint = nome;
+        if(partido.getFederacao()){
+            nomeprint = "*"+nome;
+        }
+        return nomeprint + " (" + partido.getSigla() + ", " + qtdVotos + " votos)\n";
     }
 }
