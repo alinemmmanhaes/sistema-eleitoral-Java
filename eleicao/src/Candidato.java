@@ -5,6 +5,7 @@ public class Candidato {
     private String nome;
     private Partido partido;
     private LocalDate nascimento;
+    private int idade;
     private Boolean eleito;
     private int genero;
     private int qtdVotos;
@@ -19,6 +20,10 @@ public class Candidato {
         this.qtdVotos = 0;
     }
 
+    public void calculaIdade(LocalDate hoje){
+
+    }
+
     public int getNumero() {
         return numero;
     }
@@ -30,6 +35,9 @@ public class Candidato {
     }
     public LocalDate getNascimento() {
         return nascimento;
+    }
+    public int getIdade(){
+        return idade;
     }
     public Boolean getEleito() {
         return eleito;
@@ -46,10 +54,6 @@ public class Candidato {
 
     @Override
     public String toString() {
-        String nomeprint = nome;
-        if(partido.getFederacao()){
-            nomeprint = "*"+nome;
-        }
-        return nomeprint + " (" + partido.getSigla() + ", " + qtdVotos + " votos)\n";
+        return nome + " (" + partido.getSigla() + ", " + qtdVotos + " votos)\n";
     }
 }

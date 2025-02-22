@@ -1,3 +1,4 @@
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -9,6 +10,8 @@ public class Eleicao {
     private int vagas;
     private LocalDate data;
     private List<Candidato> eleitosCandidatos;
+    private List<Candidato> candidatos2;
+    private List<Partido> partidos2;
 
     public Eleicao(LocalDate data) {
         this.vagas = 0;
@@ -16,6 +19,8 @@ public class Eleicao {
         this.candidatos = new HashMap<>();
         this.partidos = new HashMap<>();
         this.eleitosCandidatos = new LinkedList<>();
+        this.candidatos2 = new LinkedList<>();
+        this.partidos2 = new LinkedList<>();
     }
 
     public void adicionaCandidato(Candidato c){
@@ -27,8 +32,8 @@ public class Eleicao {
     }
 
     public void relatorio1(){
-        //listCandidatos.addAll(candidatos.values());
-        for (Candidato c : this.candidatos.values()) {
+        candidatos2.addAll(candidatos.values());
+        for (Candidato c : candidatos2) {
             if(c.getEleito()){
                 eleitosCandidatos.add(c);
                 this.vagas++;
@@ -40,21 +45,27 @@ public class Eleicao {
     }
 
     public void relatorio2(){
+        Collections.sort(eleitosCandidatos, new ComparadorCandidatos());
         int i = 1;
         System.out.println("Vereadores eleitos:");
         for (Candidato c : eleitosCandidatos) {
-            System.out.println(i + " - " + c);
+            System.out.print(i + " - ");
+            if(c.getPartido().getFederacao()) System.out.print("*");
+            System.out.println(c);
             i++;
         }
         System.out.println();
     }
 
     public void relatorio3(){
-        //sort()
+        Collections.sort(candidatos2, new ComparadorCandidatos());
         int i = 1;
         System.out.println("Candidatos mais votados (em ordem decrescente de votação e respeitando número de vagas):");
-        for (Candidato c : candidatos.values()) {
-            System.out.println(i + " - " + c);
+        for (Candidato c : candidatos2) {
+            System.out.print(i + " - ");
+            if(c.getPartido().getFederacao()) System.out.print("*");
+            System.out.println(c);
+
             if(i == this.vagas) break;
             i++;
         }
@@ -62,17 +73,52 @@ public class Eleicao {
     }
 
     public void relatorio4(){
-        //sort()
         int i = 1;
         System.out.println("Teriam sido eleitos se a votação fosse majoritária, e não foram eleitos:");
-        for (Candidato c : candidatos.values()) {
+        for (Candidato c : candidatos2) {
             if(!(eleitosCandidatos.contains(c))){
-                System.out.println(i + " - " + c);
+                System.out.print(i + " - ");
+                if(c.getPartido().getFederacao()) System.out.print("*");
+                System.out.println(c);
             }
             if(i == this.vagas) break;
             i++;
         }
         System.out.println();
+    }
+
+    public void relatorio5(){
+        int i = 1;
+        System.out.println("Eleitos, que se beneficiaram do sistema proporcional:");
+        System.out.println("(com sua posição no ranking de mais votados)");
+        for (Candidato c : candidatos2) {
+            if(i <= vagas) continue;
+            i++;
+            if(c.getEleito()){
+                System.out.print(i + " - ");
+                if(c.getPartido().getFederacao()) System.out.print("*");
+                System.out.println(c);
+            }
+        }
+        System.out.println();
+    }
+
+    public void relatorio6(){
+        partidos2.addAll(partidos.values());
+        //sort()
+        System.out.println("Votação dos partidos e número de candidatos eleitos:");
+        for (Partido p : partidos2) {
+            p.calculaQtdCandidatosEleitos();
+            System.out.println(p);
+        }
+        System.out.println();
+    }
+
+    public void relatorio7(){
+        //votos partido != 0
+        //candidatos partido != 0
+        //ordena candidatos partido
+        //ultimo tem que ter votos
     }
 
     public HashMap<Integer, Candidato> getCandidatos() {
