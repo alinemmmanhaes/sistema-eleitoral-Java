@@ -1,4 +1,7 @@
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 
 public class Partido {
     private int numero;
@@ -8,6 +11,7 @@ public class Partido {
     private int qtdVotosLegenda;
     private int candidatosEleitos;
     private HashMap<Integer, Candidato> candidatos;
+    private List<Candidato> listCandidatos;
 
     public Partido(int numero, String sigla, Boolean federacao) {
         this.numero = numero;
@@ -17,6 +21,7 @@ public class Partido {
         this.qtdVotosLegenda = 0;
         this.candidatosEleitos = 0;
         this.candidatos = new HashMap<>();
+        this.listCandidatos = new LinkedList<>();
     }
 
     public int getNumero() {
@@ -40,11 +45,18 @@ public class Partido {
     public HashMap<Integer, Candidato> getCandidatos() {
         return candidatos;
     }
+    public Candidato getCandidatoPos(int i){
+        return listCandidatos.get(i);
+    }
 
     public void calculaQtdCandidatosEleitos(){
         for (Candidato c : candidatos.values()) {
             if(c.getEleito()) candidatosEleitos++;
         }
+    }
+    public void ordenaCandidatos(){
+        listCandidatos.addAll(candidatos.values());
+        Collections.sort(listCandidatos, new ComparadorCandidatos());
     }
 
     @Override

@@ -105,7 +105,7 @@ public class Eleicao {
 
     public void relatorio6(){
         partidos2.addAll(partidos.values());
-        //sort()
+        Collections.sort(partidos2, new ComparadorPartidos());
         System.out.println("Votação dos partidos e número de candidatos eleitos:");
         for (Partido p : partidos2) {
             p.calculaQtdCandidatosEleitos();
@@ -115,10 +115,33 @@ public class Eleicao {
     }
 
     public void relatorio7(){
-        //votos partido != 0
-        //candidatos partido != 0
-        //ordena candidatos partido
-        //ultimo tem que ter votos
+        for (Partido p : partidos2) {
+            if(p.getCandidatos().size() == 0){
+                partidos2.remove(p);
+            }
+            else p.ordenaCandidatos();
+        }
+        Collections.sort(partidos2, new ComparadorPartCand());
+
+        int i = 1;
+        for (Partido p : partidos2) {
+            if(p.getQtdVotos() == 0) continue;
+
+            Candidato c1 = p.getCandidatoPos(0);
+
+            int size = p.getCandidatos().size();
+            Candidato c2 = p.getCandidatoPos(size-1);
+            while(c2.getQtdVotos() == 0){
+                size--;
+                c2 = p.getCandidatoPos(size-1);
+            }
+
+            System.out.print(i + " - " + p.getSigla() + " - " + p.getNumero() + ", ");
+            System.out.print(c1.getNome() + " (" + c1.getNumero() + ", " + c1.getQtdVotos() + " votos) / ");
+            System.out.println(c1.getNome() + " (" + c1.getNumero() + ", " + c1.getQtdVotos() + " votos)");
+            i++;
+        }
+        System.out.println();
     }
 
     public HashMap<Integer, Candidato> getCandidatos() {
