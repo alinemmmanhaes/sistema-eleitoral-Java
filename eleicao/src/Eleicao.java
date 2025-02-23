@@ -31,9 +31,14 @@ public class Eleicao {
         this.partidos.put(p.getNumero(), p);
     }
 
+    public boolean partidoExiste(int num){
+        return(partidos.get(num) != null);
+    }
+
     public void relatorio1(){
         candidatos2.addAll(candidatos.values());
         for (Candidato c : candidatos2) {
+            c.calculaIdade(this.data);
             if(c.getEleito()){
                 eleitosCandidatos.add(c);
                 this.vagas++;
@@ -115,16 +120,18 @@ public class Eleicao {
     }
 
     public void relatorio7(){
-        for (Partido p : partidos2) {
+        List<Partido> listPartidos = new LinkedList<>();
+        listPartidos.addAll(partidos2);
+        for (Partido p : listPartidos) {
             if(p.getCandidatos().size() == 0){
-                partidos2.remove(p);
+                listPartidos.remove(p);
             }
             else p.ordenaCandidatos();
         }
-        Collections.sort(partidos2, new ComparadorPartCand());
+        Collections.sort(listPartidos, new ComparadorPartCand());
 
         int i = 1;
-        for (Partido p : partidos2) {
+        for (Partido p : listPartidos) {
             if(p.getQtdVotos() == 0) continue;
 
             Candidato c1 = p.getCandidatoPos(0);
@@ -136,6 +143,7 @@ public class Eleicao {
                 c2 = p.getCandidatoPos(size-1);
             }
 
+            System.out.println("Primeiro e último colocados de cada partido:");
             System.out.print(i + " - " + p.getSigla() + " - " + p.getNumero() + ", ");
             System.out.print(c1.getNome() + " (" + c1.getNumero() + ", " + c1.getQtdVotos() + " votos) / ");
             System.out.println(c1.getNome() + " (" + c1.getNumero() + ", " + c1.getQtdVotos() + " votos)");
@@ -144,32 +152,73 @@ public class Eleicao {
         System.out.println();
     }
 
+    public void relatorio8(){
+        int menorque30 = 0, entre30e40 = 0, entre40e50 = 0, entre50e60 = 0, maiorque60 = 0;
+
+        System.out.println("Eleitos, por faixa etária (na data da eleição):");
+        for (Candidato c : eleitosCandidatos) {
+            int idade = c.getIdade();
+            if(idade < 30) menorque30++;
+            else if(idade >= 30 && idade < 40) entre30e40++;
+            else if(idade >= 40 && idade < 50) entre40e50++;
+            else if(idade >= 50 && idade < 60) entre50e60++;
+            else maiorque60++;
+        }
+        int total = eleitosCandidatos.size();
+        System.out.printf("      Idade < 30: " + menorque30 + " (%.2f%%)\n", 100*((double)menorque30)/total);
+        System.out.printf("30 <= Idade < 40: " + entre30e40 + " (%.2f%%)\n", 100*((double)entre30e40)/total);
+        System.out.printf("40 <= Idade < 50: " + entre40e50 + " (%.2f%%)\n", 100*((double)entre40e50)/total);
+        System.out.printf("50 <= Idade < 60: " + entre50e60 + " (%.2f%%)\n", 100*((double)entre50e60)/total);
+        System.out.printf("60 <= Idade     : " + maiorque60 + " (%.2f%%)\n", 100*((double)maiorque60)/total);
+        System.out.println();
+    }
+
+    public void relatorio9(){
+        int homem = 0, mulher = 0;
+
+        System.out.println("Eleitos, por faixa etária (na data da eleição):");
+        for (Candidato c : eleitosCandidatos) {
+            int genero = c.getGenero();
+            if(genero == 2) homem++;
+            else if(genero == 4) mulher++;
+        }
+        int total = eleitosCandidatos.size();
+        System.out.println("Eleitos, por gênero:");
+        System.out.printf("Feminino: %d (%.2f%%)\n", mulher, 100*((double)mulher)/total);
+        System.out.printf("Masculino: %d (%.2f%%)\n", homem, 100*((double)homem)/total);
+        System.out.println();
+    }
+
+    public void relatorio10(){
+        int total = 0, legenda = 0;
+        for (Partido p : partidos2) {
+            total += p.getQtdVotos();
+            legenda += p.getQtdVotosLegenda();
+        }
+        int nominal = total - legenda;
+        System.out.printf("Total de votos válidos:    %d\n", total);
+        System.out.printf("Total de votos nominais:   %d (%.2f%%)\n", nominal, 100*((double)nominal)/total);
+        System.out.printf("Total de votos de legenda: %d (%.2f%%)\n", legenda, 100*((double)legenda)/total);
+        System.out.println();
+    }
+
     public HashMap<Integer, Candidato> getCandidatos() {
         return candidatos;
     }
-
     public Candidato getCandidato(int num){
         Candidato c = candidatos.get(num);
         return c;
     }
-
     public HashMap<Integer, Partido> getPartidos() {
         return partidos;
     }
-
     public Partido getPartido(int num){
         Partido p = partidos.get(num);
         return p;
     }
-
-    public boolean partidoExiste(int num){
-        return(partidos.get(num) != null);
-    }
-
     public int getVagas() {
         return vagas;
     }
-
     public LocalDate getData() {
         return data;
     }

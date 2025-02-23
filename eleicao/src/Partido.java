@@ -49,6 +49,9 @@ public class Partido {
         return listCandidatos.get(i);
     }
 
+    public void adicionaCandidato(Candidato c){
+        this.candidatos.put(c.getNumero(), c);
+    }
     public void calculaQtdCandidatosEleitos(){
         for (Candidato c : candidatos.values()) {
             if(c.getEleito()) candidatosEleitos++;
@@ -57,6 +60,15 @@ public class Partido {
     public void ordenaCandidatos(){
         listCandidatos.addAll(candidatos.values());
         Collections.sort(listCandidatos, new ComparadorCandidatos());
+    }
+    public void aumentaVotosLegenda(int qtd){
+        this.qtdVotosLegenda += qtd;
+    }
+    public void aumentaVotosNominal(Candidato c, int qtd){
+        if(this.candidatos.containsValue(c)){
+            c.aumentaQtdVotos(qtd);
+            this.qtdVotos += qtd;
+        }
     }
 
     @Override

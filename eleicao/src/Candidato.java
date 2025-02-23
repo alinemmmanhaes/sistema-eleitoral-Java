@@ -1,4 +1,5 @@
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 
 public class Candidato {
     private int numero;
@@ -18,10 +19,12 @@ public class Candidato {
         this.eleito = eleito;
         this.genero = genero;
         this.qtdVotos = 0;
+
+        this.partido.adicionaCandidato(this);
     }
 
     public void calculaIdade(LocalDate hoje){
-
+        this.idade = (int) ChronoUnit.YEARS.between(hoje, this.nascimento);
     }
 
     public int getNumero() {
@@ -48,6 +51,7 @@ public class Candidato {
     public int getQtdVotos() {
         return qtdVotos;
     }
+    
     public void aumentaQtdVotos(int qtdVotos) {
         this.qtdVotos += qtdVotos;
     }
