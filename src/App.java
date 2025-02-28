@@ -7,6 +7,8 @@ public class App {
     Pré-condição de leitura: entradas nos args e nos arquivos de candidato e votação conforme especificado nao enunciado do Trabalho
     Por exemplo, a cidade deve ter um código que a representa e este deve ser do tipo "int"
     O mesmo vale para outras leituras, como o número de um candidato
+
+    Para as funções com parâmetro de candidato ou partido, é pré-condição que esse parâmetro exista
     */
     public static void main(String[] args) {
         if(args.length <= 3){

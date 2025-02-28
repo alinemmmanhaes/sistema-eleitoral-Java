@@ -211,12 +211,12 @@ public class Relatorio {
         decimalFormat.setMaximumFractionDigits(2);
         decimalFormat.setMinimumFractionDigits(2);
 
-        int total = 0, legenda = 0;
+        int total = 0, legenda = 0, nominal = 0;
         for (Partido p : partidos) {
             total += p.getQtdVotos();
+            nominal += p.getQtdVotosNominais();
             legenda += p.getQtdVotosLegenda();
         }
-        int nominal = total - legenda;
         System.out.println("Total de votos válidos:    " + milFormat.format(total));
         System.out.println("Total de votos nominais:   " + milFormat.format(nominal) + " (" + decimalFormat.format(100*((double)nominal)/total) + "%)" );
         System.out.println("Total de votos de legenda: " + milFormat.format(legenda) + " (" + decimalFormat.format(100*((double)legenda)/total) + "%)");

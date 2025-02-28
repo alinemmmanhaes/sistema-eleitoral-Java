@@ -56,6 +56,10 @@ public class Leitor {
                 eleicao.adicionaPartido(p);
             }
 
+            /*verifica se a cidade do candidato é a mesma a ser analisada
+            se o cargo é o de vereador
+            se a situação eleitoral do candidato não é invalida
+            */
             if(codCidade == this.cidade && cargo == this.cargo && codEleito != -1){
                 Partido partido = eleicao.getPartido(numeroPartido);
                 Candidato c = new Candidato(numeroCandidato, nomeCandidato, partido, nascimento, (codEleito == 2 || codEleito == 3), codGenero);

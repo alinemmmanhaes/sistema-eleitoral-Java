@@ -18,7 +18,7 @@ public class Eleicao {
         if(p != null) p.aumentaVotosLegenda(qtdVotos);
     }
 
-    //para um candidato de numero do parametro, aumenta os votos do seu partido
+    //para um candidato de numero do parametro, aumenta os votos nominais do seu partido e do candidato
     public void candidatoInsereVotos(int numeroCandidato, int qtdVotos){
         Candidato c = this.getCandidato(numeroCandidato);
         if(c != null){

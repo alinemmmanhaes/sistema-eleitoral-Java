@@ -9,7 +9,7 @@ public class Partido {
     private int numero;
     private String sigla;
     private Boolean federacao;
-    private int qtdVotos; //votos totais (nominal + legenda)
+    private int qtdVotosNominais;
     private int qtdVotosLegenda;
     private int candidatosEleitos;
     private HashMap<Integer, Candidato> candidatos;
@@ -19,7 +19,7 @@ public class Partido {
         this.numero = numero;
         this.sigla = sigla;
         this.federacao = federacao;
-        this.qtdVotos = 0;
+        this.qtdVotosNominais = 0;
         this.qtdVotosLegenda = 0;
         this.candidatosEleitos = 0;
         this.candidatos = new HashMap<>();
@@ -37,10 +37,10 @@ public class Partido {
         return federacao;
     }
     public int getQtdVotos() {
-        return qtdVotos;
+        return (qtdVotosNominais + qtdVotosLegenda);
     }
     public int getQtdVotosNominais() {
-        return (qtdVotos - qtdVotosLegenda);
+        return qtdVotosNominais;
     }
     public int getQtdVotosLegenda() {
         return qtdVotosLegenda;
@@ -73,13 +73,12 @@ public class Partido {
     //aumenta o numero de votos de legenda dados ao partido
     public void aumentaVotosLegenda(int qtd){
         this.qtdVotosLegenda += qtd;
-        this.qtdVotos += qtd;
     }
-    //aumenta o numero de votos totais dados ao partido
+    //aumenta o numero de votos nominais dados ao partido
     public void aumentaVotosNominal(Candidato c, int qtd){
         if(this.candidatos.containsValue(c)){
             c.aumentaQtdVotos(qtd);
-            this.qtdVotos += qtd;
+            this.qtdVotosNominais += qtd;
         }
     }
 
@@ -87,6 +86,7 @@ public class Partido {
     @Override
     public String toString() {
         NumberFormat brFormat = NumberFormat.getInstance(Locale.forLanguageTag("pt-BR"));
+        int qtdVotos = (qtdVotosNominais+qtdVotosLegenda);
 
         String saida = sigla + " - " + numero + ", " + brFormat.format(qtdVotos);
 
@@ -96,7 +96,7 @@ public class Partido {
         else saida += " votos (";
         saida += brFormat.format(qtdVotos-qtdVotosLegenda);
 
-        if((qtdVotos-qtdVotosLegenda) <2){
+        if((qtdVotosNominais) <2){
             saida += " nominal e ";
         }
         else saida += " nominais e ";
