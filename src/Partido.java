@@ -9,7 +9,7 @@ public class Partido {
     private int numero;
     private String sigla;
     private Boolean federacao;
-    private int qtdVotos;
+    private int qtdVotos; //votos totais (nominal + legenda)
     private int qtdVotosLegenda;
     private int candidatosEleitos;
     private HashMap<Integer, Candidato> candidatos;
@@ -19,7 +19,7 @@ public class Partido {
         this.numero = numero;
         this.sigla = sigla;
         this.federacao = federacao;
-        this.qtdVotos = 0; //votos totais (nominal + legenda)
+        this.qtdVotos = 0;
         this.qtdVotosLegenda = 0;
         this.candidatosEleitos = 0;
         this.candidatos = new HashMap<>();
