@@ -1,5 +1,7 @@
+import java.text.NumberFormat;
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
+import java.time.Period;
+import java.util.Locale;
 
 public class Candidato {
     private int numero;
@@ -20,13 +22,10 @@ public class Candidato {
         this.genero = genero;
         this.qtdVotos = 0;
 
-        this.partido.adicionaCandidato(this);
+        this.partido.adicionaCandidato(this); //adiciona candidato ao seu partido, assim um terá acesso ao outro
     }
 
-    public void calculaIdade(LocalDate hoje){
-        this.idade = (int) ChronoUnit.YEARS.between(hoje, this.nascimento);
-    }
-
+    //funções get, para retorno de informações armazenadas dentro de um candidato
     public int getNumero() {
         return numero;
     }
@@ -52,13 +51,21 @@ public class Candidato {
         return qtdVotos;
     }
     
+    //aumenta a quantidade de votos armazenada no candidato
     public void aumentaQtdVotos(int qtdVotos) {
         this.qtdVotos += qtdVotos;
     }
+    //calcula a idade do candidato, comparando a sua data de nascimento com hoje (data da eleição) 
+    public void calculaIdade(LocalDate hoje){
+        this.idade = Period.between(this.nascimento, hoje).getYears();
+    }
 
+    //formato de representação de um candidato em string, utilizado em varios relatórios para printar candidatos
     @Override
     public String toString() {
-        String s = nome + " (" + partido.getSigla() + ", " + qtdVotos;
+        NumberFormat brFormat = NumberFormat.getInstance(Locale.forLanguageTag("pt-BR"));
+
+        String s = nome + " (" + partido.getSigla() + ", " + brFormat.format(qtdVotos);
         if(qtdVotos < 2) s += " voto)";
         else s += " votos)";
         return s;

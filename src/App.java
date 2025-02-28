@@ -1,111 +1,49 @@
 import java.io.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Scanner;
 
 public class App {
-    public static void main(String[] args) throws IOException {
-        //LocalDate diaEleicao = LocalDate.parse(args[3], DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-        LocalDate diaEleicao = LocalDate.parse("06/10/2024", DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-        Eleicao eleicao = new Eleicao(diaEleicao);
-        //int cidade = Integer.parseInt(args[0]), vereador = 13;
-        int cidade = 57053, vereador = 13;
-        //String arquivoCandidatos = args[1];
-        String arquivoCandidatos = "consulta_cand_2024_ES.csv";
-        //String arquivoVotacao = args[2];
-        String arquivoVotacao = "votacao_secao_2024_ES.csv";
-
-        InputStream is = new FileInputStream(arquivoCandidatos);
-        InputStreamReader isr = new InputStreamReader(is, "ISO-8859-1");
-        BufferedReader br = new BufferedReader(isr);
-        br.readLine();
-        String linha = br.readLine();
-
-        while (linha != null) {
-            Scanner s = new Scanner(linha).useDelimiter(";");
-            int i = 0;
-            int codCidade = 0, cargo = 0, numeroCandidato = 0, numeroPartido = 0, numeroFederacao = 0, codEleito = 0, codGenero = 0;
-            String nomeCandidato = "", siglaPartido = "";
-            LocalDate nascimento = LocalDate.parse("2005-03-04");
-            
-            for(i=0; i<50; i++){
-                String input = s.next();
-                if(i==11) codCidade = Integer.parseInt(input.replace("\"", ""));
-                else if(i == 13) cargo = Integer.parseInt(input.replace("\"", ""));
-                else if(i == 16) numeroCandidato = Integer.parseInt(input.replace("\"", ""));
-                else if(i == 18) nomeCandidato = input.replace("\"", "");
-                else if(i == 25) numeroPartido = Integer.parseInt(input.replace("\"", ""));
-                else if(i == 26) siglaPartido = input.replace("\"", "");
-                else if(i == 28) numeroFederacao = Integer.parseInt(input.replace("\"", ""));
-                else if(i == 36) nascimento = LocalDate.parse(input.replace("\"", ""), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-                else if(i == 38) codGenero = Integer.parseInt(input.replace("\"", ""));
-                else if(i == 48) codEleito = Integer.parseInt(input.replace("\"", ""));
-            }
-
-            if(eleicao.partidoExiste(numeroPartido) == false){
-                Partido p = new Partido(numeroPartido, siglaPartido, (numeroFederacao != -1));
-                eleicao.adicionaPartido(p);
-            }
-
-            if(codCidade == cidade && cargo == vereador && codEleito != -1){
-                Partido partido = eleicao.getPartido(numeroPartido);
-                Candidato c = new Candidato(numeroCandidato, nomeCandidato, partido, nascimento, (codEleito == 2 || codEleito == 3), codGenero);
-                eleicao.adicionaCandidato(c);
-            }
-            
-            s.close();
-            linha = br.readLine();
+    /*
+    Pré-condição de leitura: entradas nos args e nos arquivos de candidato e votação conforme especificado nao enunciado do Trabalho
+    Por exemplo, a cidade deve ter um código que a representa e este deve ser do tipo "int"
+    O mesmo vale para outras leituras, como o número de um candidato
+    */
+    public static void main(String[] args) {
+        if(args.length <= 3){
+            System.out.println("Erro! Faltam argumentos suficientes para o funcionamento do programa.");
+            return;
         }
-        br.close();
 
-        is = new FileInputStream(arquivoVotacao);
-        isr = new InputStreamReader(is, "UTF-8");
-        br = new BufferedReader(isr);
-        br.readLine();
-        linha = br.readLine();
+        //conforme a especificação, guarda em sua respectiva variavel todos os parametros passados por args
+        LocalDate diaEleicao = LocalDate.parse(args[3], DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+        int cidade = Integer.parseInt(args[0]), vereador = 13;
+        String arquivoCandidatos = args[1];
+        String arquivoVotacao = args[2];
 
-        while (linha != null) {
-            Scanner s = new Scanner(linha).useDelimiter(";");
-            int i = 0;
-            int codCidade = 0, cargo = 0, qtdVotos = 0, numeroCandidato = 0;
-            
-            for(i=0; i<26; i++){
-                String input = s.next();
-                if(i==13) codCidade = Integer.parseInt(input.replace("\"", ""));
-                else if(i == 17) cargo = Integer.parseInt(input.replace("\"", ""));
-                else if(i == 19) numeroCandidato = Integer.parseInt(input.replace("\"", ""));
-                else if(i == 21) qtdVotos = Integer.parseInt(input.replace("\"", ""));
-            }
-            
-            if(codCidade == cidade && cargo == vereador && (numeroCandidato<95 || numeroCandidato>98)){
-                if(numeroCandidato < 100){
-                    Partido p = eleicao.getPartido(numeroCandidato);
-                    if(p != null) p.aumentaVotosLegenda(qtdVotos);
-                }
-                else{
-                    Candidato c = eleicao.getCandidato(numeroCandidato);
-                    if(c != null){
-                        Partido p = c.getPartido();
-                        p.aumentaVotosNominal(c, qtdVotos);
-                    }
-                }
-            }
+        //cria um leitor, para ler os arquivos cujos nomes foram passados por args
+        Leitor leitor = new Leitor(diaEleicao, cidade, vereador);
 
-            s.close();
-            linha = br.readLine();
+        //le o arquivo de candidatos e trata IOException
+        try {
+            leitor.leCandidatos(arquivoCandidatos);
+        } catch (IOException e) {
+            System.out.println("Erro na leitura de arquivo de candidatos");
+            e.printStackTrace();
         }
-        br.close();
 
-        eleicao.relatorio1();
-        eleicao.relatorio2();
-        eleicao.relatorio3();
-        eleicao.relatorio4();
-        eleicao.relatorio5();
-        eleicao.relatorio6();
-        eleicao.relatorio7();
-        eleicao.relatorio8();
-        eleicao.relatorio9();
-        eleicao.relatorio10();
-        
+        //le o arquivo de votação e trata IOException
+        try {
+            leitor.leVotacao(arquivoVotacao);
+        } catch (IOException e) {
+            System.out.println("Erro na leitura de arquivo de votação");
+            e.printStackTrace();
+        }
+
+        //eleicao criada e calculada pelo leitor, com base nos dados presentes nos arquivos
+        Eleicao eleicao = leitor.getEleicao();
+
+        //cria um objeto da classe Relatorio, que fará todas as análises solicitadas
+        Relatorio relatorio = new Relatorio(eleicao);
+        relatorio.geraRelatorios();
     }
 }
